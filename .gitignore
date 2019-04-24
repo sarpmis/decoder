@@ -1,6 +1,9 @@
 # Stupid mac files
 *.DS_Store
 
+# User-specific file for IntelliJ
+.idea/workspace.xml
+
 # Compiled class file
 *.class
 
