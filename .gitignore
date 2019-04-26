@@ -4,6 +4,9 @@
 # User-specific file for IntelliJ
 .idea/workspace.xml
 
+# No LM models
+models/*
+
 # Compiled class file
 *.class
 
