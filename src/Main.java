@@ -1,15 +1,16 @@
-import kylm.main.CountNgrams;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Main {
 
-    public Main () {
-
-        System.out.println("My name is Victor");
-
-    }
-
     public static void main(String[] args) {
+        System.out.println("Hello world");
 
-        new Main();
+        LMBigram bimod = new LMBigram(0.01);
+        bimod.train("data/sentences");
+
+        LModel model = bimod;
+        ArrayList<String> lst = new ArrayList(Arrays.asList(new String[]{"hi", "my", "name", "is", "victor"}));
+        System.out.println(model.logProb(lst));
     }
 }
