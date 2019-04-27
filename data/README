@@ -6,6 +6,6 @@ NEXT STEPS
 
 - Use a better corpus to train EM (more literal translations)
 
-- Try training trigram LM.
+- Try training trigram LM
 
 - Addition, stop, removal, reordering to beam search (+ penalties)
