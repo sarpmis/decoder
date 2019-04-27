@@ -16,13 +16,14 @@ public class Main {
 
         BeamSearch searcher = new BeamSearch(tmodel, lmodel);
 
-        String sent = "yo quiero mas taco bell";
+        String sent = "yo prometo a todos que no tuve sexo con esa mujer .";
         String[] sentWords = sent.split("\\s");
         ArrayList<String> sentList = new ArrayList(Arrays.asList(sentWords));
         List<String> translation = searcher.runSearch(sentList);
         for (String s : translation) {
-            System.out.println(s);
+            System.out.print(s + " ");
         }
+        System.out.println();
 
     }
 }

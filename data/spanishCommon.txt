@@ -750,7 +750,7 @@ silla chair
 peligro danger
 fruta fruit
 rica rich
-de espesor thick
+espesor thick
 soldado soldier
 proceso process
 operar operate

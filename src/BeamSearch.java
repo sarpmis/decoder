@@ -2,7 +2,7 @@ import java.util.*;
 
 public class BeamSearch {
 
-    final int BEAM_SIZE = 10;
+    final int BEAM_SIZE = 1000;
 
     private TModel tmodel;
     private LModel lmodel;

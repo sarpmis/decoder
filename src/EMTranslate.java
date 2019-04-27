@@ -37,8 +37,8 @@ public class EMTranslate {
                 String eng = "NULL " + engScan.nextLine(); // add NULL word here
                 String forn = forScan.nextLine();
 
-                String[] engLst = eng.split("\\s");
-                String[] fornLst = forn.split("\\s");
+                String[] engLst = eng.split("\\s+");
+                String[] fornLst = forn.split("\\s+");
 
                 engSents.add(engLst);
                 fornSents.add(fornLst);
@@ -172,9 +172,9 @@ public class EMTranslate {
             }
         }
     }
-    public void printToFile(double threshold){
+    public void printToFile(double threshold, String fileName){
         try{
-            BufferedWriter writer = new BufferedWriter(new FileWriter(new File ("SpanToEng.txt")));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(new File (fileName)));
             List<String> sortedEng = table.keySet()
                     .stream()
                     .sorted()
@@ -195,7 +195,7 @@ public class EMTranslate {
                     // print only if probability is above threshold
                     if(prob > threshold) {
                         //System.out.println(engWord + "\t" + fornWord + "\t" + prob);
-                        writer.write(engWord + "\t" + fornWord + "\t" + prob);
+                        writer.write(engWord + "\t" + fornWord + "\t" + prob+"\n");
                     }
                 }
             }
@@ -207,7 +207,7 @@ public class EMTranslate {
 
     public static void main(String[] args) {
         EMTranslate em = new EMTranslate();
-        em.runEM("Span10k.txt", "En10k.txt", 10);
-        em.printProbabilities(.01);
+        em.runEM("data/Span10k.txt", "data/En10k.txt", 10);
+        em.printToFile(.01, "data/emSpanToEng.txt");
     }
 }
