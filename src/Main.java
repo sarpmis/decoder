@@ -16,7 +16,7 @@ public class Main {
 
         BeamSearch searcher = new BeamSearch(tmodel, lmodel);
 
-        String sent = "yo quiero taco bell";
+        String sent = "yo quiero mas taco bell";
         String[] sentWords = sent.split("\\s");
         ArrayList<String> sentList = new ArrayList(Arrays.asList(sentWords));
         List<String> translation = searcher.runSearch(sentList);
