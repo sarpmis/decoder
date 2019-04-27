@@ -86,7 +86,7 @@ public class LMBigram implements LModel {
     }
 
     @Override
-    public double logProb(ArrayList<String> sentWords) {
+    public double logProb(List<String> sentWords) {
         double sum = 0.0;
 
         // Make a copy so we don't mess with sentWords
