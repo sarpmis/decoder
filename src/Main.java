@@ -9,6 +9,7 @@ public class Main {
     private final double LM_DISCOUNT = 0.01;
 
     public Main () {
+
         LMBigram bimod = new LMBigram(LM_DISCOUNT);
         bimod.train("data/sentences");
         LModel lmodel = bimod;
