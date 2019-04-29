@@ -1,0 +1,11 @@
+([\.,\.,\?,\!,\(,\),\"])
+This is useful for cleaning europarl
+
+
+NEXT STEPS
+
+- Use a better corpus to train EM (more literal translations)
+
+- Try training trigram LM
+
+- Addition, stop, removal, reordering to beam search (+ penalties)

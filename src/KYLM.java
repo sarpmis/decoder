@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * A wrapper for KYLM
@@ -99,19 +100,18 @@ public class KYLM implements LModel {
     }
 
     @Override
-    public double logProb(ArrayList<String> sentWords) {
+    public double logProb(List<String> sentWords) {
         String[] sent = sentWords.toArray(new String[0]);
         return lm.getSentenceProb(sent);
     }
 
-    /*
     public static void main(String[] args) {
         // Example usage
         KYLM kylm = new KYLM(3, "sentences_3gram", true, 5, "data/sentences", true); // create new model
-        KYLM kylm = new KYLM("sentences_3gram"); // read saved model
+        //KYLM kylm = new KYLM("sentences_3gram"); // read saved model
         LModel model = kylm;
         ArrayList<String> lst = new ArrayList(Arrays.asList(new String[]{"hi", "my", "name", "is", "victor"}));
         System.out.println(model.logProb(lst));
     }
-    */
+
 }

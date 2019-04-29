@@ -2,18 +2,20 @@ import java.util.*;
 
 public class BeamSearch {
 
-    final int BEAM_SIZE = 10;
+    private final int BEAM_SIZE = 1000;
 
-    private Map<String, Map<String, Double>> translationProbs;
+    private TModel tmodel;
+    private LModel lmodel;
 
     /**
      * Creates a beam search with given
      * probability map.
      *
-     * @param translationsProbs
+     * @param tmodel
      */
-    public BeamSearch(Map<String, Map<String, Double>> translationsProbs) {
-        this.translationProbs = translationsProbs;
+    public BeamSearch(TModel tmodel, LModel lmodel) {
+        this.tmodel = tmodel;
+        this.lmodel = lmodel;
     }
 
     /**
@@ -26,17 +28,26 @@ public class BeamSearch {
      */
     public List<String> runSearch(List<String> sentence) {
         PriorityQueue<BeamOption> beamQueue = new PriorityQueue<>();
-        beamQueue.add(new BeamOption());
+        beamQueue.add(new BeamOption(lmodel));
 
         // consider each foreign word and extend all options by one
         for (String word : sentence) {
+
+//            System.out.println(word);
+
             PriorityQueue<BeamOption> newQueue = new PriorityQueue<>();
-            for (BeamOption option : beamQueue) {
-                Map<String, Double> engWords = translationProbs.get(word);
-                for (String engWord : engWords.keySet()) {
-                    BeamOption newOption = new BeamOption(option);
-                    newOption.addWord(engWord, engWords.get(engWord));
-                    newQueue.add(newOption);
+
+            Map<String, Double> engWords = tmodel.getTranslations(word);
+
+            for (String engWord : engWords.keySet()) {
+
+//                System.out.println("   " + engWord + "  " + engWords.get(engWord));
+
+                for (BeamOption option : beamQueue) {
+
+                    double engWordProb = engWords.get(engWord);
+                    List<BeamOption> newOpts = option.getAllExtensions(engWord, engWordProb);
+                    for (BeamOption newOpt : newOpts) newQueue.add(newOpt);
                 }
             }
 
@@ -83,11 +94,11 @@ public class BeamSearch {
         sent.add("f3");
 
 
-        BeamSearch bs = new BeamSearch(transMap);
-
-        List<String> translation = bs.runSearch(sent);
-        for (String s : translation) {
-            System.out.println(s);
-        }
+//        BeamSearch bs = new BeamSearch(transMap);
+//
+//        List<String> translation = bs.runSearch(sent);
+//        for (String s : translation) {
+//            System.out.println(s);
+//        }
     }
 }

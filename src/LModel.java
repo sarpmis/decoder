@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * Interface for a language model, similar to the one
@@ -6,5 +6,5 @@ import java.util.ArrayList;
  */
 public interface LModel {
 
-    public double logProb(ArrayList<String> sentWords);
+    public double logProb(List<String> sentWords);
 }
