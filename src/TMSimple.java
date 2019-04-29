@@ -5,7 +5,11 @@ import java.util.*;
 
 public class TMSimple implements TModel {
 
-    private final int MAX_TRANSLATIONS = 3;
+    private final int MAX_TRANSLATIONS = 6;
+
+    // Add more weight to items in dict
+    private final double DICT_PREFERENCE = Math.log(2.0);
+
 
     // Input from EM file
     private Map<String,Map<String,Double>> emResults;
@@ -37,6 +41,8 @@ public class TMSimple implements TModel {
                     if (words.length == 3) {
                         prob = Double.valueOf(words[2]);
                     }
+                    // Make it a log prob
+                    prob = Math.log10(prob);
 
                     // Ensure keys
                     if (!map.containsKey(frWord)) map.put(frWord, new HashMap<>());
@@ -86,39 +92,46 @@ public class TMSimple implements TModel {
         // Combine EM and dict
         for (String frWord : emResults.keySet()) {
 
+            translations.put(frWord, new HashMap<>());
+
             Map<String, Double> emEnWords = emResults.get(frWord);
 
             // If in dictionary, use EM probs
             if (dictResults.containsKey(frWord)) {
 
+                // Words in dict
                 Map<String, Double> dictEnWords = dictResults.get(frWord);
-                for (String enWord : dictEnWords.keySet()) {
 
-                    // Make sure EM actually has this particular translation
-                    if (emEnWords.containsKey(enWord)) {
-                        double prob = emEnWords.get(enWord);
-
-                        // Ensure key
-                        if (!translations.containsKey(frWord)) translations.put(frWord, new HashMap<>());
-
-                        translations.get(frWord).put(enWord, prob);
-                    }
-
+                // Get the best prob of anything in EM
+                double bestProb = -100000000.0;
+                for (String s : emEnWords.keySet()) {
+                    double curProb = emEnWords.get(s);
+                    bestProb = Math.max(bestProb, curProb);
                 }
+                bestProb += DICT_PREFERENCE;
+                if (bestProb < -100000) bestProb = 0.0;
 
+                // For all dict words not in EM, use best prob
+                for (String enWord : dictEnWords.keySet()) {
+                    translations.get(frWord).put(enWord, bestProb);
+                }
             }
 
-            // If not in dictionary, get MAX_TRANSLATION best ones
-            else {
+            // Fill up with EM words until we have MAX_TRANSLATIONS
+            int wordsLeft = MAX_TRANSLATIONS - translations.get(frWord).size();
+            if (wordsLeft > 0) {
                 PriorityQueue<WordAndProb> pq = new PriorityQueue<>();
                 for (String enWord : emEnWords.keySet()) {
-                    double prob = emEnWords.get(enWord);
-                    WordAndProb wap = new WordAndProb(enWord, -1 * prob);
-                    pq.add(wap);
+                    // Only add if not already added by dict
+                    if (!translations.get(frWord).containsKey(enWord)) {
+                        double prob = emEnWords.get(enWord);
+                        WordAndProb wap = new WordAndProb(enWord, -1 * prob);
+                        pq.add(wap);
+                    }
                 }
 
                 // Take off most likely words
-                for (int i = 0; i < MAX_TRANSLATIONS && pq.size() > 0; i += 1) {
+                for (int i = 0; i < wordsLeft && pq.size() > 0; i += 1) {
                     WordAndProb wap = pq.poll();
                     String word = wap.getWord();
                     double prob = wap.getProb() * -1;

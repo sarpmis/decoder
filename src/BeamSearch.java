@@ -2,7 +2,7 @@ import java.util.*;
 
 public class BeamSearch {
 
-    final int BEAM_SIZE = 1000;
+    private final int BEAM_SIZE = 1000;
 
     private TModel tmodel;
     private LModel lmodel;
@@ -33,16 +33,21 @@ public class BeamSearch {
         // consider each foreign word and extend all options by one
         for (String word : sentence) {
 
+//            System.out.println(word);
+
             PriorityQueue<BeamOption> newQueue = new PriorityQueue<>();
-            for (BeamOption option : beamQueue) {
 
-                Map<String, Double> engWords = tmodel.getTranslations(word);
+            Map<String, Double> engWords = tmodel.getTranslations(word);
 
-                for (String engWord : engWords.keySet()) {
+            for (String engWord : engWords.keySet()) {
 
-                    BeamOption newOption = new BeamOption(lmodel, option);
-                    newOption.addWord(engWord, engWords.get(engWord));
-                    newQueue.add(newOption);
+//                System.out.println("   " + engWord + "  " + engWords.get(engWord));
+
+                for (BeamOption option : beamQueue) {
+
+                    double engWordProb = engWords.get(engWord);
+                    List<BeamOption> newOpts = option.getAllExtensions(engWord, engWordProb);
+                    for (BeamOption newOpt : newOpts) newQueue.add(newOpt);
                 }
             }
 

@@ -3,6 +3,7 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 public class LMBigram implements LModel {
+
     public static final String START_TOKEN = "<s>";
     public static final String END_TOKEN = "</s>";
     public static final String UNKNOWN_TOKEN = "<UNK>";

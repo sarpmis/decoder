@@ -1,6 +1,12 @@
 import java.util.*;
 
 public class BeamOption implements Comparable<BeamOption> {
+
+    // >1: word probs more important, <1: lm probs more important
+    private final double TM_TO_LM_RATIO = 1.0;
+    private final int MAX_SWAP_DIST = 3;
+    private final double PENALTY_WEIGHT = 1.2;
+
     private List<String> words;
     private double wordProbs;
     private double penalty;
@@ -21,6 +27,28 @@ public class BeamOption implements Comparable<BeamOption> {
         this.lmodel = lmodel;
     }
 
+    public List<BeamOption> getAllExtensions(String w, double p) {
+
+        List<BeamOption> newOpts = new LinkedList<>();
+
+        int maxDist = Math.min(words.size(), MAX_SWAP_DIST);
+
+        for (int swapDist = 0; swapDist <= maxDist; swapDist += 1) {
+            int pos = words.size() - swapDist;
+            BeamOption newOpt = new BeamOption(lmodel, this);
+            newOpt.addWord(w, p, pos);
+            newOpt.addPenalty(computePenalty(swapDist));
+            newOpts.add(newOpt);
+        }
+
+        return newOpts;
+
+    }
+
+    private double computePenalty (int swapDist) {
+        return PENALTY_WEIGHT * Math.pow(1.5, -1.0 * swapDist) - 1.0;
+    }
+
     public void addPenalty(double p) {
         penalty += p;
     }
@@ -29,8 +57,8 @@ public class BeamOption implements Comparable<BeamOption> {
         return penalty;
     }
 
-    public void addWord(String w, double p) {
-        words.add(w);
+    public void addWord(String w, double p, int position) {
+        words.add(position, w);
         wordProbs += p;
     }
 
@@ -40,7 +68,7 @@ public class BeamOption implements Comparable<BeamOption> {
 
     public Double getScore() {
         double lmProb = lmodel.logProb(words);
-        return wordProbs + lmProb + penalty;
+        return (wordProbs * TM_TO_LM_RATIO + lmProb) / (TM_TO_LM_RATIO + 1.0) + penalty;
     }
 
     public double getWordProbs() {
