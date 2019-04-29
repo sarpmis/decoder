@@ -7,6 +7,9 @@
 # No LM models
 models/*
 
+# No big files
+*.big
+
 # Compiled class file
 *.class
 
