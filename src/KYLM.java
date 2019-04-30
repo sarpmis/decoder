@@ -1,10 +1,12 @@
 import kylm.model.ngram.NgramLM;
 import kylm.model.ngram.reader.ArpaNgramReader;
 import kylm.model.ngram.reader.NgramReader;
+import kylm.model.ngram.reader.SerializedNgramReader;
 import kylm.model.ngram.smoother.KNSmoother;
 import kylm.model.ngram.smoother.NgramSmoother;
 import kylm.model.ngram.writer.ArpaNgramWriter;
 import kylm.model.ngram.writer.NgramWriter;
+import kylm.model.ngram.writer.SerializedNgramWriter;
 import kylm.reader.SentenceReader;
 import kylm.reader.TextFileSentenceReader;
 
@@ -31,7 +33,7 @@ public class KYLM implements LModel {
      * @param saveModel whether the model should be saved to a file in the models/ directory
      */
     public KYLM(int n, String name, boolean smoothUnigrams, int unkCutOff, String corpusFile, boolean saveModel) {
-        int debug = 0; // 0 for no debug, 1 for debugging prints
+        int debug = 1; // 0 for no debug, 1 for debugging prints
 
         // create smoother
         NgramSmoother smoother = new KNSmoother();
@@ -59,7 +61,7 @@ public class KYLM implements LModel {
 
             if(saveModel) {
                 // create writer
-                NgramWriter writer = new ArpaNgramWriter();
+                NgramWriter writer = new SerializedNgramWriter();
 
                 System.err.println("Started writing");
                 long time = System.currentTimeMillis();
@@ -87,7 +89,7 @@ public class KYLM implements LModel {
     public KYLM(String name) {
         System.err.println("Reading model");
 
-        NgramReader nr =  new ArpaNgramReader();
+        NgramReader nr =  new SerializedNgramReader();
         lm = null;
         try {
             lm = nr.read("models/" + name + ".model");
@@ -107,10 +109,13 @@ public class KYLM implements LModel {
 
     public static void main(String[] args) {
         // Example usage
-        KYLM kylm = new KYLM(3, "sentences_3gram", true, 5, "data/sentences", true); // create new model
+        KYLM kylm = new KYLM(3, "full_wiki_3gram", true, 10, "data/wiki_clean.big", true); // create new model
         //KYLM kylm = new KYLM("sentences_3gram"); // read saved model
         LModel model = kylm;
-        ArrayList<String> lst = new ArrayList(Arrays.asList(new String[]{"hi", "my", "name", "is", "victor"}));
+        ArrayList<String> lst = new ArrayList(Arrays.asList(new String[]{"hi", "there", "my", "name", "is", "victor", "."}));
+        System.out.println(model.logProb(lst));
+
+        lst = new ArrayList(Arrays.asList(new String[]{"paris", "is", "the", "capital", "of", "france", "."}));
         System.out.println(model.logProb(lst));
     }
 
