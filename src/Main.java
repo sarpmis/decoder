@@ -5,6 +5,10 @@ import java.util.*;
 
 public class Main {
 
+    private final String SPANISH = "data/inputSents/span";
+    private final String TRANS = "data/inputSents/engTrans";
+    private final String REAL = "data/inputSents/engReal";
+
     private final double LM_DISCOUNT = 0.01;
 
     private List<String> readSents(String fileName) {
@@ -45,7 +49,7 @@ public class Main {
 
         BeamSearch searcher = new BeamSearch(tmodel, lmodel);
 
-        List<String> sents = readSents("data/inputSentencesSpan");
+        List<String> sents = readSents(SPANISH);
 
         List<String> outputs = new ArrayList<>();
 
@@ -64,7 +68,10 @@ public class Main {
             outputs.add(outputSent);
         }
 
-        writeSentsToFile(outputs, "data/inputSentencesEng");
+        writeSentsToFile(outputs, TRANS);
+
+        double bleuScore = new BLEU().runBLEU(TRANS, REAL);
+        System.out.println("Bleu score: " + bleuScore);
     }
 
     public static void main(String[] args) {

@@ -11,7 +11,9 @@ public class BLEU {
 
     public static void main(String args[]){
         BLEU b =  new BLEU();
-        System.out.println("BLEU score "+b.runBLEU("mtTest1.txt","rtTest1.txt"));
+        String trans = "data/inputSents/engTrans";
+        String real = "data/inputSents/engReal";
+        System.out.println("BLEU score "+b.runBLEU(trans,real));
     }
     public double runBLEU(String MTFile, String RTFile){
         double sum=0;
