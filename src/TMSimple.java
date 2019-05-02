@@ -5,7 +5,7 @@ import java.util.*;
 
 public class TMSimple implements TModel {
 
-    private final int MAX_TRANSLATIONS = 6;
+    private final int MAX_TRANSLATIONS = 5;
 
     // Add more weight to items in dict
     private final double DICT_PREFERENCE = Math.log(2.0);
@@ -85,7 +85,7 @@ public class TMSimple implements TModel {
         dictResults = new HashMap<>();
         translations = new HashMap<>();
 
-        loadFileIntoMap("data/emSpanToEng.txt", emResults);
+        loadFileIntoMap("data/emSpanToEng100kCleanedFinal.txt", emResults);
         loadFileIntoMap("data/spanToEng.txt", dictResults);
         loadFileIntoMap("data/spanishCommon.txt", dictResults);
 
