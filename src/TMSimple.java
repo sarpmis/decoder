@@ -151,7 +151,7 @@ public class TMSimple implements TModel {
     public Map<String, Double> getTranslations(String frWord) {
         if (!translations.containsKey(frWord)) {
             Map<String, Double> ts = new HashMap<>();
-            ts.put("NULL", 1.0);
+            ts.put("<unk>", 1.0);
             return ts;
         }
         else return translations.get(frWord);
