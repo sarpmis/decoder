@@ -1,10 +1,42 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
 
 public class Main {
 
     private final double LM_DISCOUNT = 0.01;
+
+    private List<String> readSents(String fileName) {
+
+        List<String> sents = new ArrayList<>();
+
+        try {
+            Scanner scanner = new Scanner(new File(fileName));
+            while (scanner.hasNext()) {
+                String line = scanner.nextLine();
+                if (!(line.charAt(0) == '#')) {
+                    sents.add(line);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading input sentences.");
+        }
+
+        return sents;
+    }
+
+    private void writeSentsToFile(List<String> sents, String fileName) {
+        try {
+            FileWriter writer = new FileWriter(new File(fileName));
+            for (String sent : sents) {
+                writer.write(sent + "\n");
+            }
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("Error writing translations to file");
+        }
+    }
 
     public Main () {
         LModel lmodel = new KYLM("1mil_wiki_3gram");
@@ -13,23 +45,9 @@ public class Main {
 
         BeamSearch searcher = new BeamSearch(tmodel, lmodel);
 
-        ArrayList<String> sents = new ArrayList<>();
+        List<String> sents = readSents("data/inputSentencesSpan");
 
-        // This sent doesn't translate well because tuve, sexo and esa don't have translations in EM
-//        sents.add("yo prometo a todos que no tuve sexo con esa mujer .");
-//        // This sent shows that we need EM - no doesn't map to "doesn't"
-//        sents.add("ella no habla con nadie .");
-//        sents.add("nosotros escribimos la carta esta mañana .");
-//        sents.add("ponerse el sombrero .");
-//        sents.add("me gustaría que vinieran .");
-//        sents.add("yo voy al hospital .");
-//        sents.add("yo hablo con él .");
-//        sents.add("yo soy muy inteligente .");
-        sents.add("la presencia humana en méxico se remonta a %NUM% años antes del presente .");
-        sents.add("es una planta herbácea anual , erecta o trepadora , de tallo pubescente o glabrescente cuando adulta .");
-        sents.add("las flores se disponen en racimos usualmente axilares , más cortos que las hojas .");
-        sents.add("méxico es el undécimo país más poblado del mundo , con una población estimada en más de %NUM% millones de personas en %NUM% .");
-        sents.add("destaca su gran arquitectura monumental , y sus ofrendas hechas de jade .");
+        List<String> outputs = new ArrayList<>();
 
         for (String sent : sents) {
 
@@ -37,11 +55,16 @@ public class Main {
             String[] sentWords = sent.split("\\s");
             ArrayList<String> sentList = new ArrayList(Arrays.asList(sentWords));
             List<String> translation = searcher.runSearch(sentList);
+
+            StringJoiner sj = new StringJoiner(" ");
             for (String s : translation) {
-                System.out.print(s + " ");
+                sj.add(s);
             }
-            System.out.println();
+            String outputSent = sj.toString();
+            outputs.add(outputSent);
         }
+
+        writeSentsToFile(outputs, "data/inputSentencesEng");
     }
 
     public static void main(String[] args) {
