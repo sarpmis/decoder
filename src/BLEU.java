@@ -2,25 +2,28 @@ import java.util.*;
 import java.io.*;
 
 public class BLEU {
-    private int r = 0;
-    private int c = 0;
+    private int r = 0; //r word count
+    private int c = 0; //c word count
     private static final int N =4;
     public BLEU(){
 
     }
 
     public static void main(String args[]){
-        System.out.println("Hello world");
         BLEU b =  new BLEU();
-        System.out.println(b.runBLEU("mtTest1.txt","rtTest1.txt"));
-
+        System.out.println("BLEU score "+b.runBLEU("mtTest1.txt","rtTest1.txt"));
     }
     public double runBLEU(String MTFile, String RTFile){
         double sum=0;
+        this.getLengths(MTFile, RTFile);
+        //System.out.println("Reference translation corpus length "+r+" Machine translation corpus length "+c);
         for(int n =1; n<=N;n++){
             double pn = this.getPn(MTFile,RTFile,n);
+           // System.out.println("Reference translation corpus length "+r+" Machine translation corpus length "+c);
+
+           // System.out.println(n+" "+pn);
             if(pn >0){
-                sum+= Math.log(pn/((double)N));
+                sum+= Math.log(pn)/((double)N);
             }
         }
 
@@ -28,7 +31,6 @@ public class BLEU {
         if(c<=r){
             BP= Math.exp(1-((double)r/(double)c ));
         }
-
         return BP*Math.exp(sum);
     }
 
@@ -40,7 +42,7 @@ public class BLEU {
             Scanner scanMT = new Scanner(new File(MTFile));
             Scanner scanRT =  new Scanner(new File(RTFile));
             while(scanRT.hasNext() && scanMT.hasNext()){
-
+                //alt enter
                 //get n gram counts for reference translation
                 String[] rt = scanRT.nextLine().toLowerCase().replaceAll("[^(a-z| )]","").split("\\s");
                 HashMap<String, Integer> rtCount = new HashMap<>();
@@ -73,6 +75,22 @@ public class BLEU {
                     }
                 }
                 denominator+= mt.length-n+1;
+            }
+
+        }catch(IOException e){
+
+        }
+        //System.out.println("Numerator "+numerator+ " Denominator "+denominator);
+        return ((double) numerator)/((double)denominator);
+    }
+
+    public void getLengths(String MTFile, String RTFile){
+        try{
+            Scanner scanMT = new Scanner(new File(MTFile));
+            Scanner scanRT =  new Scanner(new File(RTFile));
+            while(scanRT.hasNext() && scanMT.hasNext()){
+                String[] rt = scanRT.nextLine().toLowerCase().replaceAll("[^(a-z| )]","").split("\\s");
+                String[] mt = scanMT.nextLine().toLowerCase().replaceAll("[^(a-z| )]","").split("\\s");
 
                 r+=rt.length;
                 c+=mt.length;
@@ -81,8 +99,6 @@ public class BLEU {
         }catch(IOException e){
 
         }
-        //System.out.println("Numerator "+numerator+ " Denominator "+denominator);
-        return ((double) numerator)/((double)denominator);
     }
 
 }
