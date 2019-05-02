@@ -6,7 +6,7 @@ import java.util.*;
 public class Main {
 
     private final String SPANISH = "data/inputSents/span";
-    private final String TRANS = "data/inputSents/engTrans";
+    private final String TRANS = "data/inputSents/engTransLowSwapPenalty";
     private final String REAL = "data/inputSents/engReal";
 
     private final double LM_DISCOUNT = 0.01;

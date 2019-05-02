@@ -5,7 +5,7 @@ import java.util.*;
 
 public class TMSimple implements TModel {
 
-    private final int MAX_TRANSLATIONS = 5;
+    private final int MAX_TRANSLATIONS = 3;
 
     // Add more weight to items in dict
     private final double DICT_PREFERENCE = Math.log(2.0);
