@@ -5,7 +5,7 @@ public class BeamOption implements Comparable<BeamOption> {
     // >1: word probs more important, <1: lm probs more important
     private final double TM_TO_LM_RATIO = 30.0;
     private final int MAX_SWAP_DIST = 2;
-    private final double PENALTY_WEIGHT = 0.1;
+    private final double SWAP_PENALTY = 0.04;
 
     private List<String> words;
     private double wordProbs;
@@ -14,7 +14,7 @@ public class BeamOption implements Comparable<BeamOption> {
     private LModel lmodel;
 
     public BeamOption(LModel lmodel) {
-        words = new LinkedList<String>();
+        words = new LinkedList<>();
         wordProbs = 0;
         penalty = 0;
         this.lmodel = lmodel;
@@ -46,7 +46,7 @@ public class BeamOption implements Comparable<BeamOption> {
     }
 
     private double computePenalty (int swapDist) {
-        return PENALTY_WEIGHT * Math.pow(1.5, -1.0 * swapDist) - 1.0;
+        return SWAP_PENALTY * Math.pow(1.5, -1.0 * swapDist) - 1.0;
     }
 
     public void addPenalty(double p) {

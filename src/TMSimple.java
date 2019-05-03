@@ -5,10 +5,10 @@ import java.util.*;
 
 public class TMSimple implements TModel {
 
-    private final int MAX_TRANSLATIONS = 3;
+    private final int MAX_TRANSLATIONS = 4;
 
     // Add more weight to items in dict
-    private final double DICT_PREFERENCE = Math.log(2.0);
+    private final double DICT_PREFERENCE = 2.0;
 
 
     // Input from EM file
@@ -108,7 +108,7 @@ public class TMSimple implements TModel {
                     double curProb = emEnWords.get(s);
                     bestProb = Math.max(bestProb, curProb);
                 }
-                bestProb += DICT_PREFERENCE;
+                bestProb += Math.log10(DICT_PREFERENCE);
                 if (bestProb < -100000) bestProb = 0.0;
 
                 // For all dict words not in EM, use best prob
