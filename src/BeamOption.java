@@ -3,9 +3,9 @@ import java.util.*;
 public class BeamOption implements Comparable<BeamOption> {
 
     // >1: word probs more important, <1: lm probs more important
-    private final double TM_TO_LM_RATIO = 30.0;
-    private final int MAX_SWAP_DIST = 2;
-    private final double SWAP_PENALTY = 0.04;
+    private final double TM_TO_LM_RATIO = 5.0;
+    private final int MAX_SWAP_DIST = 0;
+    private final double SWAP_PENALTY = 0.2;
 
     private List<String> words;
     private double wordProbs;
