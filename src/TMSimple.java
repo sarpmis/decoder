@@ -34,8 +34,10 @@ public class TMSimple implements TModel {
                     String frWord = words[0];
                     String enWord = words[1];
 
-                    frWord = frWord.toLowerCase();
-                    enWord = enWord.toLowerCase();
+                    if(!frWord.equals("%NUM%")) {
+                        frWord = frWord.toLowerCase();
+                        enWord = enWord.toLowerCase();
+                    }
 
                     double prob = 1.0;
                     if (words.length == 3) {
@@ -159,7 +161,7 @@ public class TMSimple implements TModel {
 
     public static void main (String[] args) {
         TMSimple ts = new TMSimple();
-        Map<String, Double> translations = ts.getTranslations("yo");
+        Map<String, Double> translations = ts.getTranslations("%NUM%");
         for (String s : translations.keySet()) {
             System.out.println(s + " " + translations.get(s));
         }
