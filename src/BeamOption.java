@@ -4,7 +4,7 @@ public class BeamOption implements Comparable<BeamOption> {
 
     // >1: word probs more important, <1: lm probs more important
     private final double TM_TO_LM_RATIO = 30.0;
-    private final int MAX_SWAP_DIST = 2;
+    private final int MAX_SWAP_DIST = 0;
     private final double SWAP_PENALTY = 0.2;
 
     private List<String> words;
@@ -68,6 +68,7 @@ public class BeamOption implements Comparable<BeamOption> {
 
     public Double getScore() {
         double lmProb = lmodel.logProb(words);
+        lmProb = 0; // TODO remove
         return (wordProbs * TM_TO_LM_RATIO + lmProb) / (TM_TO_LM_RATIO + 1.0) + penalty;
     }
 
