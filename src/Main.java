@@ -5,9 +5,9 @@ import java.util.*;
 
 public class Main {
 
-    private final String SPANISH = "data/inputSents/euroParl/spanClean.txt";
-    private final String TRANS = "data/inputSents/euroParl/enTransBase.txt";
-    private final String REAL = "data/inputSents/euroParl/enClean.txt";
+    private final String SPANISH = "data/final/SpanClean";
+    private final String TRANS = "data/final/trans/base";
+    private final String REAL = "data/final/EnClean.txt";
 
     private final double LM_DISCOUNT = 0.01;
 
