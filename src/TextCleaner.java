@@ -85,4 +85,15 @@ public class TextCleaner {
         System.out.println("Sents per line = " + ((double) totalSents)/totalLines);
         System.out.println("Total chars = " + totalChars);
     }
+
+
+    public static void main(String[] args) {
+      try {
+        TextCleaner.clean("../data/final/EnReference", "../data/final/EnClean");
+        TextCleaner.clean("../data/final/SpanReference", "../data/final/SpanClean");
+      } catch (IOException e) {
+        System.out.println("Error cleaning.");
+      }
+
+    }
 }
