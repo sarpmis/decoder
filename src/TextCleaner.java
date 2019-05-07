@@ -34,14 +34,6 @@ public class TextCleaner {
             totalLines++;
             String line = sc.nextLine();
 
-            // skip empty lines
-            if(line.isEmpty() || line.startsWith("-") || line.length() < MIN_LINE_SIZE_TO_CONSIDER) {
-                emptyLines++;
-                continue;
-            }
-
-            // remove everything in parentheses
-            line = line.replaceAll("\\(.*\\)", " ");
 
             // remove all quotation marks
             line = line.replaceAll("\"", " ");
@@ -82,41 +74,7 @@ public class TextCleaner {
 
             line = lst.stream().reduce("", (a,b) -> a + " " + b);
 
-            // there is more than one sentence per line and sometimes they wrap
-            // make it so that there is only one sentence per line and make wrapped sentences a single line
-            line = line.trim();
-
-            Pattern p = Pattern.compile("[.?!]");
-            Matcher m = p.matcher(line);
-
-            // extract the left-most sentence
-            while(m.find()) {
-                int pos = m.start();
-//                System.out.println("POS = " + pos);
-                String sent = line.substring(0, pos + 1);
-
-                // if a sentence wrapped from the last line add it to the start of this sentence
-                if(wrappedSent != null) {
-                    sent = wrappedSent + " " +  sent;
-                    wrappedSent = null;
-                }
-
-                sent = sent.trim();
-                sent = sent.replaceAll("\\s+", " "); // remove extra spaces again
-
-                // write the sentence to file
-                if(sent.length() > MIN_LINE_SIZE_TO_PRINT) {
-                    totalSents++;
-                    writer.write(sent + "\n");
-                }
-
-                line = line.substring(pos + 1, line.length());
-                m = p.matcher(line);
-            }
-
-            if(!line.isEmpty()) {
-                wrappedSent = line;
-            }
+            writer.write(line + "\n");
         }
 
         writer.close();
