@@ -6,7 +6,7 @@ import java.util.*;
 public class Main {
 
     private final String SPANISH = "data/final/SpanClean";
-    private final String TRANS = "data/final/trans/noSwap";
+    private final String TRANS = "data/final/trans/swapPenaltyPointFive";
     private final String REAL = "data/final/EnClean.txt";
 
     private final double LM_DISCOUNT = 0.01;
