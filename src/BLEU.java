@@ -1,5 +1,6 @@
 import java.util.*;
 import java.io.*;
+import java.util.stream.Collectors;
 
 public class BLEU {
     private int r = 0; //r word count
@@ -11,11 +12,29 @@ public class BLEU {
 
     public static void main(String args[]){
         BLEU b =  new BLEU();
-        String trans = "data/inputSents/engTrans";
-        String real = "data/inputSents/engReal";
-        System.out.println("BLEU score "+b.runBLEU(trans,real));
+        //System.out.println("BLEU score "+b.runBLEU("mtTest1.txt","rtTest1.txt"));
+        System.out.println("lols");
+        System.out.println("reference translation "+b.runBLEU("en30Final.txt","en30Final.txt"));
+
+        System.out.println("gTrans "+b.runBLEU("gTransFinal.txt","en30Final.txt"));
+        System.out.println("base "+b.runBLEU("base.txt","en30Final.txt"));
+        System.out.println("LMMoreImportant "+b.runBLEU("LMMoreImportant.txt","en30Final.txt"));
+        System.out.println("LowSwap "+b.runBLEU("LowSwap.txt","en30Final.txt"));
+        System.out.println("wordForWord "+b.runBLEU("wordForWord.txt","en30Final.txt"));
+        System.out.println("lmEvenMoreImportant "+b.runBLEU("lmEvenMoreImportant.txt","en30Final.txt"));
+        System.out.println("lmMediumImportant "+b.runBLEU("LMMediumImportance.txt","en30Final.txt"));
+        System.out.println("no swap "+b.runBLEU("noSwap.txt","en30Final.txt"));
+        System.out.println("swap penalty .5 "+b.runBLEU("swapPenaltyPoint5.txt","en30Final.txt"));
+        System.out.println("swap penalty .1 "+b.runBLEU("swapPenaltyPoint1.txt","en30Final.txt"));
+
+
+        b.cleanFile("gTrans.txt", "gTransFinal.txt");
+
+
     }
     public double runBLEU(String MTFile, String RTFile){
+        r=0;
+        c=0;
         double sum=0;
         this.getLengths(MTFile, RTFile);
         //System.out.println("Reference translation corpus length "+r+" Machine translation corpus length "+c);
@@ -101,6 +120,34 @@ public class BLEU {
         }catch(IOException e){
 
         }
+    }
+
+    public void cleanFile(String inFile, String outFile){
+        try {
+
+            Scanner engScan = new Scanner(new File(inFile));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(new File(outFile)));
+
+            while(engScan.hasNext()){
+                String eng ="";
+                char[] engChars = (engScan.nextLine()).toLowerCase().toCharArray();
+                for(char c:engChars) {
+                    if(Character.isLetter(c)|Character.isWhitespace(c)|c=='.'| c==','| c==';'|c ==':'|c== '!'|c=='?'| c=='\''| c== '"'|c=='('| c==')'|c=='-') {
+                        eng =eng+c;
+                    }else {
+                        eng =eng+" ";
+                    }
+                }
+                writer.write(eng.toLowerCase()+"\n");
+            }
+            writer.close();
+        } catch (IOException e) {
+
+        }
+
+
+
+
     }
 
 }
